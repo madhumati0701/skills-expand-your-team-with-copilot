@@ -106,12 +106,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       document.documentElement.setAttribute("data-theme", savedTheme);
-      updateThemeToggleButton(savedTheme);
     }
+    // Always update button to reflect current theme (default is light)
+    updateThemeToggleButton(savedTheme || "light");
   }
 
   function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute("data-theme");
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
     const newTheme = currentTheme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", newTheme);
     localStorage.setItem("theme", newTheme);
