@@ -472,27 +472,39 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Helper function to escape HTML entities to prevent XSS
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Function to generate share buttons HTML
   function generateShareButtonsHtml(name, details) {
     const formattedSchedule = formatSchedule(details);
     const shareText = `Check out "${name}" at Mergington High School! ${details.description} Schedule: ${formattedSchedule}`;
     const pageUrl = window.location.href;
 
+    // Escape HTML entities for safe insertion into attributes
+    const escapedName = escapeHtml(name);
+    const escapedShareText = escapeHtml(shareText);
+    const escapedPageUrl = escapeHtml(pageUrl);
+
     return `
       <div class="share-buttons">
-        <button class="share-button twitter tooltip" data-activity="${name}" data-text="${shareText}" title="Share on Twitter">
+        <button class="share-button twitter tooltip" data-activity="${escapedName}" data-text="${escapedShareText}" title="Share on X">
           𝕏
-          <span class="tooltip-text">Share on Twitter/X</span>
+          <span class="tooltip-text">Share on X</span>
         </button>
-        <button class="share-button facebook tooltip" data-activity="${name}" data-url="${pageUrl}" title="Share on Facebook">
+        <button class="share-button facebook tooltip" data-activity="${escapedName}" data-url="${escapedPageUrl}" title="Share on Facebook">
           f
           <span class="tooltip-text">Share on Facebook</span>
         </button>
-        <button class="share-button email tooltip" data-activity="${name}" data-text="${shareText}" title="Share via Email">
+        <button class="share-button email tooltip" data-activity="${escapedName}" data-text="${escapedShareText}" title="Share via Email">
           ✉
           <span class="tooltip-text">Share via Email</span>
         </button>
-        <button class="share-button copy-link tooltip" data-activity="${name}" data-text="${shareText}" title="Copy to clipboard">
+        <button class="share-button copy-link tooltip" data-activity="${escapedName}" data-text="${escapedShareText}" title="Copy to clipboard">
           🔗
           <span class="tooltip-text">Copy to clipboard</span>
         </button>
@@ -508,7 +520,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageUrl = window.location.href;
 
     if (button.classList.contains("twitter")) {
-      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+      const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
       window.open(twitterUrl, "_blank", "width=550,height=420");
     } else if (button.classList.contains("facebook")) {
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`;
@@ -519,16 +531,20 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     } else if (button.classList.contains("copy-link")) {
       const textToCopy = `${shareText}\n\n${pageUrl}`;
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        button.classList.add("copied");
-        button.innerHTML = '✓<span class="tooltip-text">Copied!</span>';
-        setTimeout(() => {
-          button.classList.remove("copied");
-          button.innerHTML = '🔗<span class="tooltip-text">Copy to clipboard</span>';
-        }, 2000);
-      }).catch(() => {
-        showMessage("Failed to copy to clipboard", "error");
-      });
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          button.classList.add("copied");
+          button.textContent = "✓";
+          setTimeout(() => {
+            button.classList.remove("copied");
+            button.textContent = "🔗";
+          }, 2000);
+        }).catch(() => {
+          showMessage("Failed to copy to clipboard", "error");
+        });
+      } else {
+        showMessage("Clipboard not available. Please copy manually.", "error");
+      }
     }
   }
 
