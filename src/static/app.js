@@ -531,7 +531,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     } else if (button.classList.contains("copy-link")) {
       const textToCopy = `${shareText}\n\n${pageUrl}`;
-      if (navigator.clipboard && window.isSecureContext) {
+      if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
         navigator.clipboard.writeText(textToCopy).then(() => {
           button.classList.add("copied");
           button.textContent = "✓";
