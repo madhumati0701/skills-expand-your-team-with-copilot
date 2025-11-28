@@ -25,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeLoginModal = document.querySelector(".close-login-modal");
   const loginMessage = document.getElementById("login-message");
 
+  // Theme toggle element
+  const themeToggle = document.getElementById("theme-toggle");
+
   // Activity categories with corresponding colors
   const activityTypes = {
     sports: { label: "Sports", color: "#e8f5e9", textColor: "#2e7d32" },
@@ -97,6 +100,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchActivities();
   }
+
+  // Dark mode functions
+  function initTheme() {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      document.documentElement.setAttribute("data-theme", savedTheme);
+    }
+    // Always update button to reflect current theme (default is light)
+    updateThemeToggleButton(savedTheme || "light");
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateThemeToggleButton(newTheme);
+  }
+
+  function updateThemeToggleButton(theme) {
+    const icon = themeToggle.querySelector(".theme-icon");
+    const text = themeToggle.querySelector("span:not(.theme-icon)");
+    if (theme === "dark") {
+      icon.textContent = "☀️";
+      text.textContent = "Light";
+    } else {
+      icon.textContent = "🌙";
+      text.textContent = "Dark";
+    }
+  }
+
+  // Theme toggle event listener
+  themeToggle.addEventListener("click", toggleTheme);
 
   // Check if user is already logged in (from localStorage)
   function checkAuthentication() {
@@ -862,6 +898,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // Initialize app
+  initTheme();
   checkAuthentication();
   initializeFilters();
   fetchActivities();

@@ -32,6 +32,40 @@
   --info-light: #d1ecf1;
 }
 
+/* Dark mode color palette */
+[data-theme="dark"] {
+  /* Primary colors */
+  --primary: #5c6bc0;
+  --primary-light: #8e99a4;
+  --primary-dark: #3949ab;
+  --primary-text: #ffffff;
+
+  /* Secondary colors */
+  --secondary: #ffab40;
+  --secondary-light: #ffdd71;
+  --secondary-dark: #ff9100;
+  --secondary-text: #000000;
+
+  /* Neutral colors */
+  --background: #121212;
+  --surface: #1e1e1e;
+  --text-primary: #e0e0e0;
+  --text-secondary: #a0a0a0;
+  --border: #333333;
+  --border-light: #2a2a2a;
+  --border-focus: #444444;
+
+  /* Feedback colors */
+  --success: #4caf50;
+  --success-light: #1b3d1c;
+  --warning: #ffb74d;
+  --warning-light: #3d3017;
+  --error: #ef5350;
+  --error-light: #3d1919;
+  --info: #4fc3f7;
+  --info-light: #1a3a47;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -617,6 +651,8 @@ footer {
   position: absolute;
   top: 10px;
   right: 15px;
+  display: flex;
+  align-items: center;
 }
 
 #user-status {
@@ -663,4 +699,28 @@ footer {
 
 #logout-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Dark mode toggle button */
+#theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  transition: background-color 0.2s;
+  cursor: pointer;
+  border: none;
+  color: inherit;
+  margin-right: 10px;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.theme-icon {
+  font-size: 1rem;
 }
